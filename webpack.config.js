@@ -1,5 +1,6 @@
 const webpack = require('webpack');
 const path = require('path');
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 const sourcePath = path.join(__dirname, './app');
 const staticsPath = path.join(__dirname, './static');
@@ -18,6 +19,7 @@ module.exports = function (env) {
       NODE_ENV: nodeEnv,
     }),
     new webpack.NamedModulesPlugin(),*/
+    new ExtractTextPlugin({ filename: 'styles.css', disable: false, allChunks: true }),
   ];
 
   if (isProd) {
@@ -66,35 +68,63 @@ module.exports = function (env) {
     module: {
       rules: [
         {
-          test: /\.html$/,
+          test: /\.(htm|html|xhtml|hbs|handlebars|php)$/,
+          include: path.resolve(__dirname, "."),
+          exclude: [
+            path.join(__dirname, './static'),
+            path.join(__dirname, './node_modules')
+          ],
+          enforce: "pre",
+          use: [{
+            loader: "htmllint-loader",
+            options: {
+              failOnError: true,
+              failOnWarning: false
+            }
+          }],
+        },
+        {
+          test: /\.(htm|html|xhtml|hbs|handlebars|php)$/,
           exclude: /node_modules/,
-          use: {
+          use: [{
             loader: 'file-loader',
-            query: {
+            options: {
               name: '[name].[ext]'
-            },
-          },
+            }
+          },{
+            loader: 'html-loader',
+            options: {
+              minimize: isProd
+            }
+          }],
         },
         {
           test: /\.css$/,
           exclude: /node_modules/,
-          use: [
-            'style-loader',
-            'css-loader'
-          ]
+          use: ExtractTextPlugin.extract({
+            fallback: "style-loader",
+            use: [{
+              loader: 'css-loader',
+              options: {
+                minimize: isProd
+              }
+            },'postcss-loader']
+          })
         },
         {
           test: /\.(js|jsx)$/,
           exclude: /node_modules/,
           loader: "babel-loader",
           options: {
-            presets: ["es2015"]
+            presets: [
+              ["es2015", { "modules": false }]
+            ]
           },
         },
       ],
     },
     resolve: {
-      extensions: ['.webpack-loader.js', '.web-loader.js', '.loader.js', '.js', '.json', '.css'],
+      extensions: ['.webpack-loader.js', '.web-loader.js', '.loader.js', '.js', '.jsx', '.json', '.css'],
       modules: [
         "node_modules",
         sourcePath
