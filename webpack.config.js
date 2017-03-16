@@ -2,6 +2,7 @@ const webpack = require('webpack');
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 const sourcePath = path.join(__dirname, './app');
 const staticsPath = path.join(__dirname, './static');
@@ -24,6 +25,9 @@ module.exports = function (env) {
       template: path.join(__dirname, './index.html')
     }),
     new ExtractTextPlugin({ filename: 'styles.css', disable: false, allChunks: true }),
+    new CopyWebpackPlugin([
+      { from: 'fragments/', to: 'fragments/' }
+    ])
   ];
 
   if (isProd) {
