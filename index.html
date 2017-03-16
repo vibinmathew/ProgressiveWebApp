@@ -1,12 +1,18 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <meta charset="utf-8">
+    <meta charset="utf-8" />
     <title>Progressive Web App</title>
   </head>
   <body>
-    <h1>Please wait ...</h1>
-
-    <script src="/js.bundle.js"></script>
+    <header class="header">
+      <h1 class="header__title">Progressive Web App</h1>
+      <button id="butRefresh" class="headerButton"></button>
+    </header>
+    <div class="loader">
+      <svg viewBox="0 0 32 32" width="32" height="32">
+        <circle id="spinner" cx="16" cy="16" r="14" fill="none"></circle>
+      </svg>
+    </div>
   </body>
 </html>

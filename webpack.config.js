@@ -1,5 +1,6 @@
 const webpack = require('webpack');
 const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 const sourcePath = path.join(__dirname, './app');
@@ -19,6 +20,9 @@ module.exports = function (env) {
       NODE_ENV: nodeEnv,
     }),
     new webpack.NamedModulesPlugin(),*/
+    new HtmlWebpackPlugin({
+      template: path.join(__dirname, './index.html')
+    }),
     new ExtractTextPlugin({ filename: 'styles.css', disable: false, allChunks: true }),
   ];
 
@@ -69,7 +73,7 @@ module.exports = function (env) {
       rules: [
         {
           test: /\.(htm|html|xhtml|hbs|handlebars|php)$/,
-          include: path.resolve(__dirname, "."),
+          include: sourcePath,
           exclude: [
             path.join(__dirname, './static'),
             path.join(__dirname, './node_modules')
@@ -85,6 +89,7 @@ module.exports = function (env) {
         },
         {
           test: /\.(htm|html|xhtml|hbs|handlebars|php)$/,
+          include: sourcePath,
           exclude: /node_modules/,
           use: [{
             loader: 'file-loader',
