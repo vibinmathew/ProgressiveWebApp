@@ -1,9 +1,8 @@
 import styles from './app.css';
 
-import {cube} from './app.js';
-
 import DB from './localDB.js';
 
+import {cube} from './app.js';
 
 console.log(cube(55)); // 125
 

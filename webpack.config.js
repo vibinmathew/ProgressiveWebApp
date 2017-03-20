@@ -26,7 +26,8 @@ module.exports = function (env) {
     }),
     new ExtractTextPlugin({ filename: 'styles.css', disable: false, allChunks: true }),
     new CopyWebpackPlugin([
-      { from: 'fragments/', to: 'fragments/' }
+      {from: 'fragments/', to: 'fragments/'},
+      {from: 'webcomponents-loader.js', to: 'webcomponents-loader.js'}
     ])
   ];
 
@@ -86,7 +87,7 @@ module.exports = function (env) {
           use: [{
             loader: "htmllint-loader",
             options: {
-              failOnError: true,
+              failOnError: false,
               failOnWarning: false
             }
           }],

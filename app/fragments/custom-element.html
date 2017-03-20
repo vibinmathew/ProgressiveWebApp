@@ -1,21 +1,71 @@
-<link rel="import"  href="https://polygit.org/polymer+2.0.0-rc.2/components/polymer/polymer-element.html">
-
-<dom-module id="custom-element">
-
-   <template>
-    <!-- bind to the "owner" property -->
-    This is <b>[[owner]]</b>'s name-tag element.
-  </template>
-
-  <script>
-    class DomElement extends Polymer.Element {
-      static get is() { return "custom-element"; }
-      constructor() {
-        super();
-        this.owner = "Daniel";
+<template id="app-drawer">
+  <style>
+    p { color: orange; }
+  </style>
+  <p>I'm in shadow dom!</p>
+  <slot></slot>
+</template>
+<script>
+  class AppDrawer extends HTMLElement {
+    get open() {
+      return this.hasAttribute('open');
+    }
+    set open(val) {
+      if (val) {
+        this.setAttribute('open', '');
+      } else {
+        this.removeAttribute('open');
+      }
+      this.toggleDrawer();
+    }
+    static get observedAttributes() {
+      return ['disabled', 'open'];
+    }
+    get disabled() {
+      return this.hasAttribute('disabled');
+    }
+    set disabled(val) {
+      if (val) {
+        this.setAttribute('disabled', '');
+      } else {
+        this.removeAttribute('disabled');
       }
     }
-    customElements.define(DomElement.is, DomElement);
-  </script>
 
-</dom-module>
+    attributeChangedCallback(name, oldValue, newValue) {
+      /* When the drawer is disabled, update keyboard/screen reader behavior. */
+      if (this.disabled) {
+        this.setAttribute('tabindex', '-1');
+        this.setAttribute('aria-disabled', 'true');
+      } else {
+        this.setAttribute('tabindex', '0');
+        this.setAttribute('aria-disabled', 'false');
+      }
+      /* TODO: also react to the open attribute changing. */
+    }
+    
+    constructor() {
+      super();
+      let shadowRoot = this.attachShadow({mode: 'open'});
+      const t = document.currentScript.ownerDocument.querySelector('#app-drawer');
+      const instance = t.content.cloneNode(true);
+      shadowRoot.appendChild(instance);
+      
+      this.addEventListener('click', e => {
+        if (this.disabled) {
+          return;
+        }
+        this.toggleDrawer();
+      });
+    }
+
+    toggleDrawer() {
+    }
+  }
+
+  customElements.define('app-drawer', AppDrawer);
+
+  customElements.whenDefined('app-drawer').then(() => {
+    console.log('app-drawer defined');
+  });
+</script>

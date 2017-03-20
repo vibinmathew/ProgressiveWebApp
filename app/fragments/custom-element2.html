@@ -1,0 +1,29 @@
+<link rel="import"  href="https://polygit.org/polymer+2.0.0-rc.2/components/polymer/polymer-element.html">
+
+<dom-module id="custom-element">
+
+   <template>
+    <!-- bind to the "owner" property -->
+    This is <b>[[owner]]</b>'s name-tag {{test}} element.
+  </template>
+
+  <script>
+    class DomElement extends Polymer.Element {
+      static get is() { return "custom-element"; }
+      static get properties() {
+        return {
+          owner: {
+            type: String,
+            value: "Daniel",
+          }
+        };
+      }
+      constructor() {
+        super();
+        this.test = "Testing";
+      }
+    }
+    customElements.define(DomElement.is, DomElement);
+  </script>
+
+</dom-module>
